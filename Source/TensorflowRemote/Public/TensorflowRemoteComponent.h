@@ -23,6 +23,8 @@ class TENSORFLOWREMOTE_API UTensorflowRemoteComponent : public UTensorflowBaseCo
 	GENERATED_BODY()
 public:
 
+	UTensorflowRemoteComponent();
+
 	/** remote server and address, default localhost:3000 */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = TensorflowRemoteProperties)
 	FString ServerAddressAndPort;
@@ -34,7 +36,10 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = TensorflowRemoteProperties)
 	ETFServerType ServerType;
 
-	UTensorflowRemoteComponent();
+
+	virtual void SendJsonInput(const FString& InputData) override;
+
+	virtual void SendJsonInputGraphResult(const FString& InputData, FString& Result, struct FLatentActionInfo LatentInfo);
 
 protected:
 	TSharedPtr<FSocketIONative> Socket;

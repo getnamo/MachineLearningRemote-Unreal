@@ -32,7 +32,7 @@ public:
 
 	/** Latent version of SensJsonInput */
 	UFUNCTION(BlueprintCallable, meta = (Latent, LatentInfo = "LatentInfo"), Category = TensorflowFunctions)
-	virtual void SendJsonInputGraphResult(const FString& InputData, struct FLatentActionInfo LatentInfo);
+	virtual void SendJsonInputGraphResult(const FString& InputData, FString& Result, struct FLatentActionInfo LatentInfo);
 
 
 };

@@ -3,7 +3,6 @@
 #include "TensorflowBaseComponent.h"
 #include "TensorflowRemote.h"
 #include "CULambdaRunnable.h"
-#include "Engine/Engine.h"
 
 UTensorflowBaseComponent::UTensorflowBaseComponent()
 {
@@ -15,17 +14,13 @@ void UTensorflowBaseComponent::SendJsonInput(const FString& InputData)
 	UE_LOG(TensorflowBaseLog, Warning, TEXT("not implemented"));
 }
 
-void UTensorflowBaseComponent::SendJsonInputGraphResult(const FString& InputData, FLatentActionInfo LatentInfo)
+void UTensorflowBaseComponent::SendJsonInputGraphResult(const FString& InputData, FString& Result, struct FLatentActionInfo LatentInfo)
 {
-	UE_LOG(TensorflowBaseLog, Warning, TEXT("not implemented"));
+	Result = TEXT("not implemented");
 
-	//resolve the latent action
-	UWorld* World = GEngine->GetWorldFromContextObject(this, EGetWorldErrorMode::LogAndReturnNull);
-	FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
-	int32 UUID = LatentInfo.UUID;
-	FCUPendingLatentAction *LatentAction = LatentActionManager.FindExistingAction<FCUPendingLatentAction>(LatentInfo.CallbackTarget, UUID);
-	LatentAction = new FCUPendingLatentAction(LatentInfo);
-	LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, LatentAction);
+	UE_LOG(TensorflowBaseLog, Warning, TEXT("%s"), *Result);
+
+	FCULatentAction* LatentAction = FCULatentAction::CreateLatentAction(LatentInfo, this);
 	LatentAction->Call();	//resume the latent action
 }
 
