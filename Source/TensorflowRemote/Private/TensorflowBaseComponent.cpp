@@ -7,11 +7,14 @@
 UTensorflowBaseComponent::UTensorflowBaseComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
+	bIsConnectedToBackend = false;
 }
 
 void UTensorflowBaseComponent::SendJsonInput(const FString& InputData)
 {
-	UE_LOG(TensorflowBaseLog, Warning, TEXT("not implemented"));
+	FString Result = TEXT("not implemented");
+	UE_LOG(TensorflowBaseLog, Warning, TEXT("%s"), *Result);
+	OnResult.Broadcast(Result);
 }
 
 void UTensorflowBaseComponent::SendJsonInputGraphResult(const FString& InputData, FString& Result, struct FLatentActionInfo LatentInfo)

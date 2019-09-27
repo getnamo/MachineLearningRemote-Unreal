@@ -24,6 +24,7 @@ class TENSORFLOWREMOTE_API UTensorflowRemoteComponent : public UTensorflowBaseCo
 public:
 
 	UTensorflowRemoteComponent();
+	~UTensorflowRemoteComponent();
 
 	/** remote server and address, default localhost:3000 */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = TensorflowRemoteProperties)
@@ -36,9 +37,8 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = TensorflowRemoteProperties)
 	ETFServerType ServerType;
 
-
+	virtual void BeginPlay() override;
 	virtual void SendJsonInput(const FString& InputData) override;
-
 	virtual void SendJsonInputGraphResult(const FString& InputData, FString& Result, struct FLatentActionInfo LatentInfo);
 
 protected:

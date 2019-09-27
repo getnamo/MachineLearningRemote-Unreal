@@ -26,6 +26,10 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = TensorflowEvents)
 	FTFResultSignature OnResult;
 
+	/** What this means is different for each sub-type */
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = TensorflowRemoteProperties)
+	bool bIsConnectedToBackend;
+
 	/** Send input to tensorflow side result comes back to the OnResult event */
 	UFUNCTION(BlueprintCallable, Category = TensorflowFunctions)
 	virtual void SendJsonInput(const FString& InputData);
