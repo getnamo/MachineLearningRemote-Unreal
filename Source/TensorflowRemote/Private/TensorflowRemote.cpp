@@ -2,6 +2,8 @@
 
 #include "TensorflowRemote.h"
 
+DEFINE_LOG_CATEGORY(TensorflowBaseLog);
+
 #define LOCTEXT_NAMESPACE "FTensorflowRemoteModule"
 
 void FTensorflowRemoteModule::StartupModule()

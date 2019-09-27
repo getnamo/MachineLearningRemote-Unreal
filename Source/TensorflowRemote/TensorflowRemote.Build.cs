@@ -41,7 +41,8 @@ public class TensorflowRemote : ModuleRules
 				"SocketIOClient",
 				"SocketIOLib",
 				"Json",
-				"SIOJson"
+				"SIOJson",
+				"CoreUtility"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);
