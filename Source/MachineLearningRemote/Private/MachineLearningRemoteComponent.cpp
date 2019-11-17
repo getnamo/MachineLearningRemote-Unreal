@@ -116,14 +116,12 @@ void UMachineLearningRemoteComponent::SendInput(const FString& InputData, const 
 
 void UMachineLearningRemoteComponent::SendRawInput(const TArray<float>& InputData, const FString& FunctionName /*= TEXT("onFloatArrayInput")*/)
 {
-	FCULatentAction* LatentAction = FCULatentAction::CreateLatentAction(LatentInfo, this);
-
 	//Embed data in a ustruct, this will get auto-serialized into a python/json object on other side
 	FMLSendRawObject SendObject;
 	SendObject.InputData = InputData;
 	SendObject.TargetFunction = FunctionName;
 
-	Socket->Emit(SendInputEvent, FMLSendRawObject::StaticStruct(), &SendObject, [this, FunctionName, LatentAction, &ResultData](auto ResponseArray)
+	Socket->Emit(SendInputEvent, FMLSendRawObject::StaticStruct(), &SendObject, [this, FunctionName](auto ResponseArray)
 	{
 		//UE_LOG(MLBaseLog, Log, TEXT("Got callback response: %s"), *USIOJConvert::ToJsonString(ResponseArray));
 		if (ResponseArray.Num() == 0)
@@ -136,7 +134,7 @@ void UMachineLearningRemoteComponent::SendRawInput(const TArray<float>& InputDat
 
 		if (Response->Type != EJson::Object)
 		{
-			UE_LOG(MLBaseLog, Warning, TEXT("SendRawInputGraphCallback: Expected float array wrapped object, got %s"), *USIOJConvert::ToJsonString(ResponseArray));
+			UE_LOG(MLBaseLog, Warning, TEXT("SendRawInput: Expected float array wrapped object, got %s"), *USIOJConvert::ToJsonString(ResponseArray));
 			return;
 		}
 
