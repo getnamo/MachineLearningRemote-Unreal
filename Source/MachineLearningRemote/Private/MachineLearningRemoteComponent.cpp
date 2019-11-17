@@ -1,12 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TensorflowRemoteComponent.h"
+#include "MachineLearningRemoteComponent.h"
 #include "SocketIOClient.h"
 #include "CULambdaRunnable.h"
 
 
-UTensorflowRemoteComponent::UTensorflowRemoteComponent()
+UMachineLearningRemoteComponent::UMachineLearningRemoteComponent()
 {
 	bConnectOnBeginPlay = true;
 	ServerType = ETFServerType::SERVER_PYTHON;
@@ -15,12 +15,12 @@ UTensorflowRemoteComponent::UTensorflowRemoteComponent()
 	Socket = ISocketIOClientModule::Get().NewValidNativePointer();
 }
 
-UTensorflowRemoteComponent::~UTensorflowRemoteComponent()
+UMachineLearningRemoteComponent::~UMachineLearningRemoteComponent()
 {
 	ISocketIOClientModule::Get().ReleaseNativePointer(Socket);
 }
 
-void UTensorflowRemoteComponent::BeginPlay()
+void UMachineLearningRemoteComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	
@@ -75,12 +75,12 @@ void UTensorflowRemoteComponent::BeginPlay()
 	}
 }
 
-void UTensorflowRemoteComponent::SendJsonInput(const FString& InputData)
+void UMachineLearningRemoteComponent::SendJsonInput(const FString& InputData)
 {
-	UE_LOG(TensorflowBaseLog, Log, TEXT("Not Implemented"));
+	UE_LOG(MLBaseLog, Log, TEXT("Not Implemented"));
 }
 
-void UTensorflowRemoteComponent::SendJsonInputGraphResult(const FString& InputData, FString& Result, struct FLatentActionInfo LatentInfo)
+void UMachineLearningRemoteComponent::SendJsonInputGraphResult(const FString& InputData, FString& Result, struct FLatentActionInfo LatentInfo)
 {
 	FCULatentAction* LatentAction = FCULatentAction::CreateLatentAction(LatentInfo, this);
 	LatentAction->Call();	//resume the latent action

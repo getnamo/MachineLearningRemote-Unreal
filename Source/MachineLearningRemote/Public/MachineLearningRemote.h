@@ -5,9 +5,9 @@
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(TensorflowBaseLog, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(MLBaseLog, Log, All);
 
-class FTensorflowRemoteModule : public IModuleInterface
+class FMachineLearningRemoteModule : public IModuleInterface
 {
 public:
 

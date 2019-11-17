@@ -2,9 +2,9 @@
 
 using UnrealBuildTool;
 
-public class TensorflowRemote : ModuleRules
+public class MachineLearningRemote : ModuleRules
 {
-	public TensorflowRemote(ReadOnlyTargetRules Target) : base(Target)
+	public MachineLearningRemote(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		

@@ -1,17 +1,17 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "TensorflowRemote.h"
+#include "MachineLearningRemote.h"
 
-DEFINE_LOG_CATEGORY(TensorflowBaseLog);
+DEFINE_LOG_CATEGORY(MLBaseLog);
 
-#define LOCTEXT_NAMESPACE "FTensorflowRemoteModule"
+#define LOCTEXT_NAMESPACE "FMachineLearningRemoteModule"
 
-void FTensorflowRemoteModule::StartupModule()
+void FMachineLearningRemoteModule::StartupModule()
 {
 	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
 }
 
-void FTensorflowRemoteModule::ShutdownModule()
+void FMachineLearningRemoteModule::ShutdownModule()
 {
 	// This function may be called during shutdown to clean up your module.  For modules that support dynamic reloading,
 	// we call this function before unloading the module.
@@ -19,4 +19,4 @@ void FTensorflowRemoteModule::ShutdownModule()
 
 #undef LOCTEXT_NAMESPACE
 	
-IMPLEMENT_MODULE(FTensorflowRemoteModule, TensorflowRemote)
+IMPLEMENT_MODULE(FMachineLearningRemoteModule, MachineLearningRemote)

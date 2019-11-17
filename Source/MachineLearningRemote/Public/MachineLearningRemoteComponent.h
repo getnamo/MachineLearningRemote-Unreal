@@ -3,9 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "TensorflowBaseComponent.h"
+#include "MachineLearningBaseComponent.h"
 #include "SocketIONative.h"
-#include "TensorflowRemoteComponent.generated.h"
+#include "MachineLearningRemoteComponent.generated.h"
 
 UENUM(BlueprintType)
 enum class ETFServerType : uint8
@@ -15,16 +15,16 @@ enum class ETFServerType : uint8
 };
 
 /**
- * Implements Tensorflow API via remote server calls
+ * Implements ML API via remote server calls
  */
 UCLASS(BlueprintType, ClassGroup = Computing, meta = (BlueprintSpawnableComponent))
-class TENSORFLOWREMOTE_API UTensorflowRemoteComponent : public UTensorflowBaseComponent
+class MACHINELEARNINGREMOTE_API UMachineLearningRemoteComponent : public UMachineLearningBaseComponent
 {
 	GENERATED_BODY()
 public:
 
-	UTensorflowRemoteComponent();
-	~UTensorflowRemoteComponent();
+	UMachineLearningRemoteComponent();
+	~UMachineLearningRemoteComponent();
 
 	/** remote server and address, default localhost:3000 */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = TensorflowRemoteProperties)
