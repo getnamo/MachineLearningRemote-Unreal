@@ -15,6 +15,11 @@
 	"Installed": false,
 	"Modules": [
 		{
+			"Name": "MachineLearningBase",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
 			"Name": "MachineLearningRemote",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"

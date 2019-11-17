@@ -2,6 +2,7 @@
 
 
 #include "MachineLearningRemoteComponent.h"
+#include "MachineLearningBase.h"
 #include "SocketIOClient.h"
 #include "CULambdaRunnable.h"
 
@@ -75,12 +76,12 @@ void UMachineLearningRemoteComponent::BeginPlay()
 	}
 }
 
-void UMachineLearningRemoteComponent::SendJsonInput(const FString& InputData)
+void UMachineLearningRemoteComponent::SendInput(const FString& InputData, const FString& FunctionName /*= TEXT("onJsonInput")*/)
 {
 	UE_LOG(MLBaseLog, Log, TEXT("Not Implemented"));
 }
 
-void UMachineLearningRemoteComponent::SendJsonInputGraphResult(const FString& InputData, FString& Result, struct FLatentActionInfo LatentInfo)
+void UMachineLearningRemoteComponent::SendInputGraphResult(const FString& InputData, FString& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName /*= TEXT("onJsonInput")*/)
 {
 	FCULatentAction* LatentAction = FCULatentAction::CreateLatentAction(LatentInfo, this);
 	LatentAction->Call();	//resume the latent action

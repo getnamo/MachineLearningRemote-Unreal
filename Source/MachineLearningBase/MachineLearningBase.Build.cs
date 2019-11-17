@@ -2,9 +2,9 @@
 
 using UnrealBuildTool;
 
-public class MachineLearningRemote : ModuleRules
+public class MachineLearningBase : ModuleRules
 {
-	public MachineLearningRemote(ReadOnlyTargetRules Target) : base(Target)
+	public MachineLearningBase(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		
@@ -38,12 +38,6 @@ public class MachineLearningRemote : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				"SocketIOClient",
-				"SocketIOLib",
-				"Json",
-				"SIOJson",
-				"CoreUtility",
-				"MachineLearningBase"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

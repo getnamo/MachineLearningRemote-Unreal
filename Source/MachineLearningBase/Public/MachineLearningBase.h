@@ -5,7 +5,9 @@
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
 
-class FMachineLearningRemoteModule : public IModuleInterface
+DECLARE_LOG_CATEGORY_EXTERN(MLBaseLog, Log, All);
+
+class FMachineLearningBaseModule : public IModuleInterface
 {
 public:
 

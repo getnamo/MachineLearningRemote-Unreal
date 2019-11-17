@@ -1,18 +1,17 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "MachineLearningRemote.h"
 #include "MachineLearningBase.h"
 
 DEFINE_LOG_CATEGORY(MLBaseLog);
 
-#define LOCTEXT_NAMESPACE "FMachineLearningRemoteModule"
+#define LOCTEXT_NAMESPACE "FMachineLearningBaseModule"
 
-void FMachineLearningRemoteModule::StartupModule()
+void FMachineLearningBaseModule::StartupModule()
 {
 	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
 }
 
-void FMachineLearningRemoteModule::ShutdownModule()
+void FMachineLearningBaseModule::ShutdownModule()
 {
 	// This function may be called during shutdown to clean up your module.  For modules that support dynamic reloading,
 	// we call this function before unloading the module.
@@ -20,4 +19,4 @@ void FMachineLearningRemoteModule::ShutdownModule()
 
 #undef LOCTEXT_NAMESPACE
 	
-IMPLEMENT_MODULE(FMachineLearningRemoteModule, MachineLearningRemote)
+IMPLEMENT_MODULE(FMachineLearningBaseModule, MachineLearningBase)

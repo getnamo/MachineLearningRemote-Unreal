@@ -7,14 +7,14 @@
 #include "Runtime/Engine/Classes/Engine/LatentActionManager.h"
 #include "MachineLearningBaseComponent.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMLResultSignature, FString, Result);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FMLResultSignature, FString, ResultData, FString, CallingFunctionName);
 
 /** 
 *	Base component for both remote and standard MachineLearning components.
 *	Considered abstract, ensures all MachineLearning components have same base API
 */
 UCLASS(ClassGroup = Computing)
-class MACHINELEARNINGREMOTE_API UMachineLearningBaseComponent : public UActorComponent
+class MACHINELEARNINGBASE_API UMachineLearningBaseComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
@@ -22,20 +22,20 @@ public:
 
 	UMachineLearningBaseComponent();
 
-	/** On bound event received. */
+	/** SendInput variant will return data to this event. */
 	UPROPERTY(BlueprintAssignable, Category = TensorflowEvents)
-	FMLResultSignature OnResult;
+	FMLResultSignature OnInputResult;
 
 	/** What this means is different for each sub-type */
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = TensorflowRemoteProperties)
 	bool bIsConnectedToBackend;
 
-	/** Send input to ML side result comes back to the OnResult event */
+	/** Send input to ML side result comes back to the OnResult event. Optionally re-target to another function name. */
 	UFUNCTION(BlueprintCallable, Category = TensorflowFunctions)
-	virtual void SendJsonInput(const FString& InputData);
+	virtual void SendInput(const FString& InputData, const FString& FunctionName = TEXT("onJsonInput"));
 
-	/** Latent version of SensJsonInput */
+	/** Send input to ML side result will come back as a latent action in the graph. Recommended method. Optionally re-target to another function name. */
 	UFUNCTION(BlueprintCallable, meta = (Latent, LatentInfo = "LatentInfo"), Category = TensorflowFunctions)
-	virtual void SendJsonInputGraphResult(const FString& InputData, FString& Result, struct FLatentActionInfo LatentInfo);
+	virtual void SendInputGraphResult(const FString& InputData, FString& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName = TEXT("onJsonInput"));
 
 };

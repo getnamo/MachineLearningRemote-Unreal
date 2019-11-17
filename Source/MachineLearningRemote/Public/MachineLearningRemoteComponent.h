@@ -38,8 +38,8 @@ public:
 	ETFServerType ServerType;
 
 	virtual void BeginPlay() override;
-	virtual void SendJsonInput(const FString& InputData) override;
-	virtual void SendJsonInputGraphResult(const FString& InputData, FString& Result, struct FLatentActionInfo LatentInfo);
+	virtual void SendInput(const FString& InputData, const FString& FunctionName = TEXT("onJsonInput")) override;
+	virtual void SendInputGraphResult(const FString& InputData, FString& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName = TEXT("onJsonInput")) override;
 
 protected:
 	TSharedPtr<FSocketIONative> Socket;
