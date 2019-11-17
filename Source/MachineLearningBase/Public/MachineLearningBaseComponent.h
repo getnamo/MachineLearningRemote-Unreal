@@ -7,8 +7,9 @@
 #include "Runtime/Engine/Classes/Engine/LatentActionManager.h"
 #include "MachineLearningBaseComponent.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FMLResultSignature, FString, ResultData, FString, CallingFunctionName);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMLConnectionSignature, FString, Endpoint);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FMLResultSignature, FString, ResultData, FString, CallingFunctionName);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FMLRawResultSignature, TArray<float>, ResultData, FString, CallingFunctionName);
 
 /** 
@@ -24,6 +25,16 @@ public:
 
 	UMachineLearningBaseComponent();
 
+	/** 
+	* When the given setup gets a connection to a backend (e.g. server for remote, library for native).
+	* This is a good place to do initialization type calls instead of BeginPlay.
+	*/
+	UPROPERTY(BlueprintAssignable, Category = TensorflowEvents)
+	FMLConnectionSignature OnConnectedToBackend;
+
+	UPROPERTY(BlueprintAssignable, Category = TensorflowEvents)
+	FMLConnectionSignature OnDisconnectedFromBackend;
+
 	/** SendInput variant will return data to this event. */
 	UPROPERTY(BlueprintAssignable, Category = TensorflowEvents)
 	FMLResultSignature OnInputResult;
@@ -32,24 +43,24 @@ public:
 	FMLRawResultSignature OnRawInputResult;
 
 	/** What this means is different for each sub-type */
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = TensorflowRemoteProperties)
+	UPROPERTY(BlueprintReadOnly, Category = TensorflowRemoteProperties)
 	bool bIsConnectedToBackend;
 
-	/** Send input to ML side result comes back to the OnResult event. Optionally re-target to another function name. */
+	/** Abstract Method: Send input to ML side result comes back to the OnResult event. Optionally re-target to another function name. */
 	UFUNCTION(BlueprintCallable, Category = TensorflowFunctions)
 	virtual void SendInput(const FString& InputData, const FString& FunctionName = TEXT("onJsonInput"));
 
-	/** Send float array input, bypasses encoding. Useful for large data/native inference. Result comes back to the OnRawResult event*/
+	/** Abstract Method: Send float array input, bypasses encoding. Useful for large data/native inference. Result comes back to the OnRawResult event*/
 	UFUNCTION(BlueprintCallable, Category = TensorflowFunctions)
 	virtual void SendRawInput(const TArray<float>& InputData, const FString& FunctionName = TEXT("onFloatArrayInput"));
 
-	/** Send input to ML side result will come back as a latent action in the graph. Recommended method. Optionally re-target to another function name. */
+	/** Abstract Method: Send input to ML side result will come back as a latent action in the graph. Recommended method. Optionally re-target to another function name. */
 	UFUNCTION(BlueprintCallable, meta = (Latent, LatentInfo = "LatentInfo"), Category = TensorflowFunctions)
 	virtual void SendInputGraphResult(const FString& InputData, FString& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName = TEXT("onJsonInput"));
 
-	/** Send float array input, bypasses encoding. Useful for large data/native inference. Result will come back as a latent action in the graph.*/
+	/** Abstract Method: Send float array input, bypasses encoding. Useful for large data/native inference. Result will come back as a latent action in the graph.*/
 	UFUNCTION(BlueprintCallable, meta = (Latent, LatentInfo = "LatentInfo"), Category = TensorflowFunctions)
-	virtual void SendRawInputGraphResult(const TArray<float>& InputData, const TArray<float>& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName = TEXT("onJsonInput"));
+	virtual void SendRawInputGraphResult(const TArray<float>& InputData, TArray<float>& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName = TEXT("onJsonInput"));
 
 private:
 	void ImmediateLatentResponse(struct FLatentActionInfo LatentInfo);

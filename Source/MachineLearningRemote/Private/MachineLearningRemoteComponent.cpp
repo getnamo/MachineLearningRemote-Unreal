@@ -31,6 +31,7 @@ void UMachineLearningRemoteComponent::BeginPlay()
 		if (Socket.IsValid())
 		{
 			bIsConnectedToBackend = true;
+			OnConnectedToBackend.Broadcast(InSessionId);
 		}
 	};
 
@@ -39,6 +40,7 @@ void UMachineLearningRemoteComponent::BeginPlay()
 		if (Socket.IsValid())
 		{
 			bIsConnectedToBackend = false;
+			OnDisconnectedFromBackend.Broadcast(Socket->LastSessionId);
 		}
 	};
 
@@ -78,7 +80,15 @@ void UMachineLearningRemoteComponent::BeginPlay()
 
 void UMachineLearningRemoteComponent::SendInput(const FString& InputData, const FString& FunctionName /*= TEXT("onJsonInput")*/)
 {
-	UE_LOG(MLBaseLog, Log, TEXT("Not Implemented"));
+	UE_LOG(MLBaseLog, Log, TEXT("Emitting test"));
+
+	Socket->Emit(TEXT("test"), TEXT("hello from ue4 remote"), [](auto ResponseArray) 
+	{
+		//auto Response = ResponseArray[0];
+
+		UE_LOG(MLBaseLog, Log, TEXT("Got callback response: %s"), *USIOJConvert::ToJsonString(ResponseArray));
+		
+	});
 }
 
 void UMachineLearningRemoteComponent::SendInputGraphResult(const FString& InputData, FString& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName /*= TEXT("onJsonInput")*/)
