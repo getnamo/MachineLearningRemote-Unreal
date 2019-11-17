@@ -26,7 +26,7 @@ void UMachineLearningBaseComponent::SendRawInput(const TArray<float>& InputData,
 	OnRawInputResult.Broadcast(ResultData, FunctionName);
 }
 
-void UMachineLearningBaseComponent::SendInputGraphResult(const FString& InputData, FString& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName /*= TEXT("Default")*/)
+void UMachineLearningBaseComponent::SendInputGraphCallback(const FString& InputData, FString& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName /*= TEXT("Default")*/)
 {
 	ResultData = TEXT("SendInputGraphResult not implemented");
 
@@ -35,7 +35,7 @@ void UMachineLearningBaseComponent::SendInputGraphResult(const FString& InputDat
 	ImmediateLatentResponse(LatentInfo);
 }
 
-void UMachineLearningBaseComponent::SendRawInputGraphResult(const TArray<float>& InputData, TArray<float>& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName /*= TEXT("onJsonInput")*/)
+void UMachineLearningBaseComponent::SendRawInputGraphCallback(const TArray<float>& InputData, TArray<float>& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName /*= TEXT("onJsonInput")*/)
 {
 	UE_LOG(MLBaseLog, Warning, TEXT("SendRawInputGraphResult not implemented"));
 	ImmediateLatentResponse(LatentInfo);

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "MachineLearningBaseComponent.h"
 #include "SocketIONative.h"
+#include "SIOJsonValue.h"
 #include "MachineLearningRemoteComponent.generated.h"
 
 UENUM(BlueprintType)
@@ -31,6 +32,9 @@ public:
 	FString ServerAddressAndPort;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = TensorflowRemoteProperties)
+	FString SendInputEvent;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = TensorflowRemoteProperties)
 	bool bConnectOnBeginPlay;
 
 	/** Support both python and nodejs servers */
@@ -38,8 +42,11 @@ public:
 	ETFServerType ServerType;
 
 	virtual void BeginPlay() override;
+
 	virtual void SendInput(const FString& InputData, const FString& FunctionName = TEXT("onJsonInput")) override;
-	virtual void SendInputGraphResult(const FString& InputData, FString& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName = TEXT("onJsonInput")) override;
+	virtual void SendRawInput(const TArray<float>& InputData, const FString& FunctionName = TEXT("onFloatArrayInput")) override;
+	virtual void SendInputGraphCallback(const FString& InputData, FString& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName = TEXT("onJsonInput")) override;
+	virtual void SendRawInputGraphCallback(const TArray<float>& InputData, TArray<float>& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName = TEXT("onJsonInput")) override;
 
 protected:
 	TSharedPtr<FSocketIONative> Socket;
