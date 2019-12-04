@@ -9,7 +9,7 @@ Want to run tensorflow or pytorch on a remote python server?
 
 - https://github.com/getnamo/machine-learning-remote-ue4
 
-Want to use tensorflow python api embedded in your unreal engine project? 
+Want to use tensorflow python api with a python instance embedded in your unreal engine project? 
 
 - https://github.com/getnamo/tensorflow-ue4
 
