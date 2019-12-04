@@ -138,6 +138,3 @@ def get_api():
 	#return CLASSNAME.get_instance()
 	return ExampleAPI.get_instance()
 ```
-
-## Status
-Not yet functional see https://github.com/getnamo/tensorflow-remote-ue4/issues/1 for initial build status.
