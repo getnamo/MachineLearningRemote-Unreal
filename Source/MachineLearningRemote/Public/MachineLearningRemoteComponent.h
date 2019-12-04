@@ -43,7 +43,10 @@ public:
 	FString StartScriptEventName;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = MLRemoteProperties)
-	FString StartScriptedEventName;
+	FString ScriptStartedEventName;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = MLRemoteProperties)
+	FString LogEventName;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = MLRemoteProperties)
 	bool bConnectOnBeginPlay;
@@ -51,6 +54,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = MLRemoteProperties)
 	bool bStartScriptOnConnection;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = MLRemoteProperties)
 	bool bScriptRunning;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = MLRemoteProperties)

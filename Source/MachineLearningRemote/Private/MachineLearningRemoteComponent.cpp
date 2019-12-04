@@ -14,9 +14,11 @@ UMachineLearningRemoteComponent::UMachineLearningRemoteComponent()
 	ServerAddressAndPort = TEXT("http://localhost:3000");
 	SendInputEventName = TEXT("sendInput");
 	StartScriptEventName = TEXT("startScript");
-	StartScriptedEventName = TEXT("scriptStarted");
+	ScriptStartedEventName = TEXT("scriptStarted");
+	LogEventName = TEXT("log");
 	DefaultScript = TEXT("empty_example");
 	bScriptRunning = false;
+	bStartScriptOnConnection = true;
 
 	Socket = ISocketIOClientModule::Get().NewValidNativePointer();
 }
@@ -81,10 +83,15 @@ void UMachineLearningRemoteComponent::BeginPlay()
 		{
 		};
 	};
-	Socket->OnEvent(StartScriptedEventName, [this](const FString& EventName, const TSharedPtr<FJsonValue>& Params)
+	Socket->OnEvent(ScriptStartedEventName, [this](const FString& EventName, const TSharedPtr<FJsonValue>& Params)
 	{
 		bScriptRunning = true;
 		OnScriptStarted.Broadcast(Params->AsString());
+	});
+
+	Socket->OnEvent(LogEventName, [this](const FString& EventName, const TSharedPtr<FJsonValue>& Params)
+	{
+		OnLog.Broadcast(Params->AsString());
 	});
 
 	if (bConnectOnBeginPlay)
