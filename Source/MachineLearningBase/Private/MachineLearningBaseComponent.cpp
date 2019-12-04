@@ -11,7 +11,7 @@ UMachineLearningBaseComponent::UMachineLearningBaseComponent()
 	bIsConnectedToBackend = false;
 }
 
-void UMachineLearningBaseComponent::SendInput(const FString& InputData, const FString& FunctionName /*= TEXT("Default")*/)
+void UMachineLearningBaseComponent::SendStringInput(const FString& InputData, const FString& FunctionName /*= TEXT("Default")*/)
 {
 	FString ResultData = TEXT("SendInput not implemented");
 	UE_LOG(MLBaseLog, Warning, TEXT("%s"), *ResultData);
@@ -26,7 +26,7 @@ void UMachineLearningBaseComponent::SendRawInput(const TArray<float>& InputData,
 	OnRawInputResult.Broadcast(ResultData, FunctionName);
 }
 
-void UMachineLearningBaseComponent::SendInputGraphCallback(const FString& InputData, FString& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName /*= TEXT("Default")*/)
+void UMachineLearningBaseComponent::SendStringInputGraphCallback(const FString& InputData, FString& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName /*= TEXT("Default")*/)
 {
 	ResultData = TEXT("SendInputGraphResult not implemented");
 

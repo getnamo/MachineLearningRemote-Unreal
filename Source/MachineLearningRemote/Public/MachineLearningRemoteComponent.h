@@ -43,9 +43,13 @@ public:
 
 	virtual void BeginPlay() override;
 
-	virtual void SendInput(const FString& InputData, const FString& FunctionName = TEXT("onJsonInput")) override;
+	/** For remote ML components we can use socket.io protocol to communicate objects directly. Return result in graph context. */
+	UFUNCTION(BlueprintCallable, meta = (Latent, LatentInfo = "LatentInfo"), Category = TensorflowFunctions)
+	virtual void SendSIOJsonInput(USIOJsonValue* InputData, USIOJsonValue*& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName = TEXT("onJsonInput"));
+
+	virtual void SendStringInput(const FString& InputData, const FString& FunctionName = TEXT("onJsonInput")) override;
 	virtual void SendRawInput(const TArray<float>& InputData, const FString& FunctionName = TEXT("onFloatArrayInput")) override;
-	virtual void SendInputGraphCallback(const FString& InputData, FString& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName = TEXT("onJsonInput")) override;
+	virtual void SendStringInputGraphCallback(const FString& InputData, FString& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName = TEXT("onJsonInput")) override;
 	virtual void SendRawInputGraphCallback(const TArray<float>& InputData, TArray<float>& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName = TEXT("onFloatArrayInput")) override;
 
 protected:

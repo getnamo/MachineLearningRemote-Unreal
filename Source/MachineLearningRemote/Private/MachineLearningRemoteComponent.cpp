@@ -79,7 +79,35 @@ void UMachineLearningRemoteComponent::BeginPlay()
 	}
 }
 
-void UMachineLearningRemoteComponent::SendInput(const FString& InputData, const FString& FunctionName /*= TEXT("onJsonInput")*/)
+void UMachineLearningRemoteComponent::SendSIOJsonInput(USIOJsonValue* InputData, USIOJsonValue*& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName /*= TEXT("onJsonInput")*/)
+{
+	//Wrap input data with targeting information. Cannot formalize this as a struct unfortunately.
+	auto SendObject = USIOJConvert::MakeJsonObject();
+	SendObject->SetStringField(TEXT("targetFunction"), FunctionName);
+	SendObject->SetField(TEXT("inputData"), InputData->GetRootValue());
+
+	FCULatentAction* LatentAction = FCULatentAction::CreateLatentAction(LatentInfo, this);
+
+	Socket->Emit(SendInputEvent, SendObject, [this, FunctionName, LatentAction, &ResultData](auto ResponseArray)
+	{
+		//UE_LOG(MLBaseLog, Log, TEXT("Got callback response: %s"), *USIOJConvert::ToJsonString(ResponseArray));
+		if (ResponseArray.Num() == 0)
+		{
+			return;
+		}
+
+		//We only handle the one response for now
+		TSharedPtr<FJsonValue> Response = ResponseArray[0];
+
+		ResultData = NewObject<USIOJsonValue>();
+
+		ResultData->SetRootValue(Response);
+
+		LatentAction->Call();	//resume the latent action
+	});
+}
+
+void UMachineLearningRemoteComponent::SendStringInput(const FString& InputData, const FString& FunctionName /*= TEXT("onJsonInput")*/)
 {
 	//Embed data in a ustruct, this will get auto-serialized into a python/json object on other side
 	FMLSendStringObject SendObject;
@@ -145,7 +173,7 @@ void UMachineLearningRemoteComponent::SendRawInput(const TArray<float>& InputDat
 	});
 }
 
-void UMachineLearningRemoteComponent::SendInputGraphCallback(const FString& InputData, FString& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName /*= TEXT("onJsonInput")*/)
+void UMachineLearningRemoteComponent::SendStringInputGraphCallback(const FString& InputData, FString& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName /*= TEXT("onJsonInput")*/)
 {
 	FCULatentAction* LatentAction = FCULatentAction::CreateLatentAction(LatentInfo, this);
 

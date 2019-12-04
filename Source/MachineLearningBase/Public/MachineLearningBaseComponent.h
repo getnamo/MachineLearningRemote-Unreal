@@ -75,7 +75,7 @@ public:
 
 	/** Send input to ML side result comes back to the OnResult event. Optionally re-target to another function name. */
 	UFUNCTION(BlueprintCallable, Category = TensorflowFunctions)
-	virtual void SendInput(const FString& InputData, const FString& FunctionName = TEXT("onJsonInput"));
+	virtual void SendStringInput(const FString& InputData, const FString& FunctionName = TEXT("onJsonInput"));
 
 	/** Send float array input, bypasses encoding. Useful for large data/native inference, may not work in remote context. Result comes back to the OnRawResult event*/
 	UFUNCTION(BlueprintCallable, Category = TensorflowFunctions)
@@ -83,7 +83,7 @@ public:
 
 	/** Send input to ML side result will come back as a latent action in the graph. Recommended method. Optionally re-target to another function name. */
 	UFUNCTION(BlueprintCallable, meta = (Latent, LatentInfo = "LatentInfo"), Category = TensorflowFunctions)
-	virtual void SendInputGraphCallback(const FString& InputData, FString& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName = TEXT("onJsonInput"));
+	virtual void SendStringInputGraphCallback(const FString& InputData, FString& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName = TEXT("onJsonInput"));
 
 	/** Send float array input, bypasses encoding. Useful for large data/native inference, may not work in remote context. Result will come back as a latent action in the graph.*/
 	UFUNCTION(BlueprintCallable, meta = (Latent, LatentInfo = "LatentInfo"), Category = TensorflowFunctions)
