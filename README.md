@@ -5,7 +5,7 @@ Should have the same api as [tensorflow-ue4](https://github.com/getnamo/tensorfl
 
 ## Unreal Machine Learning Plugin Variants
 
-Want to run tensorflow or pytorch on a remote python server?
+Want to run tensorflow or pytorch on a remote (or local) python server?
 
 - https://github.com/getnamo/machine-learning-remote-ue4
 
