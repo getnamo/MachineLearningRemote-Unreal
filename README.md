@@ -34,6 +34,24 @@ Add a ```MachineLearningRemote``` component to an actor of choice
 
 ![](https://i.imgur.com/Mx3gNAi.png)
 
+Change server endpoint and default script (see https://github.com/getnamo/machine-learning-remote-ue4#pythonapi) to fit your use case
+
+![](https://i.imgur.com/R3YVPtm.png)
+
+In your script the ```on_setup``` and if ```self.should_train_on_start``` is true ```on_begin_training``` gets called. When your script has trained or it is otherwise ready, you can send inputs to it using ```SendSIOJsonInput``` or other variants (string/raw).
+
+![](https://i.imgur.com/WjmFLAu.png)
+
+Your inputs will process and any value you return will be processed in the callback and returned in ```ResultData``` as *USIOJsonValue* in your latent callback.
+
+#### Other input variants
+
+See https://github.com/getnamo/machine-learning-remote-ue4/blob/master/Source/MachineLearningRemote/Public/MachineLearningRemoteComponent.h for all variants
+
+#### Custom Function
+
+Change the ```FunctionName``` parameter in the ```SendSIOJsonInput``` to call a different function name in your script. This name will be used verbatim.
+
 ### Python API
 These scripts should be placed in your https://github.com/getnamo/ml-remote-server ```scripts``` folder. If a matching script is defined in your ```MachineLearningRemote```->```DefaultScript``` property it should load on connect.
 
