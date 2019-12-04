@@ -28,6 +28,12 @@ Want native tensorflow inference? (WIP)
 
 ## How to use
 
+### Blueprint API
+
+Add a ```MachineLearningRemote``` component to an actor of choice
+
+![](https://i.imgur.com/Mx3gNAi.png)
+
 ### Python API
 These scripts should be placed in your https://github.com/getnamo/ml-remote-server ```scripts``` folder. If a matching script is defined in your ```MachineLearningRemote```->```DefaultScript``` property it should load on connect.
 
