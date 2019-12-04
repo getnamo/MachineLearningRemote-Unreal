@@ -12,7 +12,11 @@ UMachineLearningRemoteComponent::UMachineLearningRemoteComponent()
 	bConnectOnBeginPlay = true;
 	ServerType = ETFServerType::SERVER_PYTHON;
 	ServerAddressAndPort = TEXT("http://localhost:3000");
-	SendInputEvent = TEXT("sendInput");
+	SendInputEventName = TEXT("sendInput");
+	StartScriptEventName = TEXT("startScript");
+	StartScriptedEventName = TEXT("scriptStarted");
+	DefaultScript = TEXT("empty_example");
+	bScriptRunning = false;
 
 	Socket = ISocketIOClientModule::Get().NewValidNativePointer();
 }
@@ -33,6 +37,11 @@ void UMachineLearningRemoteComponent::BeginPlay()
 		{
 			bIsConnectedToBackend = true;
 			OnConnectedToBackend.Broadcast(InSessionId);
+
+			if (bStartScriptOnConnection)
+			{
+				StartScript(DefaultScript);
+			}
 		}
 	};
 
@@ -72,6 +81,11 @@ void UMachineLearningRemoteComponent::BeginPlay()
 		{
 		};
 	};
+	Socket->OnEvent(StartScriptedEventName, [this](const FString& EventName, const TSharedPtr<FJsonValue>& Params)
+	{
+		bScriptRunning = true;
+		OnScriptStarted.Broadcast(Params->AsString());
+	});
 
 	if (bConnectOnBeginPlay)
 	{
@@ -88,7 +102,7 @@ void UMachineLearningRemoteComponent::SendSIOJsonInput(USIOJsonValue* InputData,
 
 	FCULatentAction* LatentAction = FCULatentAction::CreateLatentAction(LatentInfo, this);
 
-	Socket->Emit(SendInputEvent, SendObject, [this, FunctionName, LatentAction, &ResultData](auto ResponseArray)
+	Socket->Emit(SendInputEventName, SendObject, [this, FunctionName, LatentAction, &ResultData](auto ResponseArray)
 	{
 		//UE_LOG(MLBaseLog, Log, TEXT("Got callback response: %s"), *USIOJConvert::ToJsonString(ResponseArray));
 		if (ResponseArray.Num() == 0)
@@ -107,6 +121,12 @@ void UMachineLearningRemoteComponent::SendSIOJsonInput(USIOJsonValue* InputData,
 	});
 }
 
+void UMachineLearningRemoteComponent::StartScript(const FString& ScriptName)
+{
+	Socket->Emit(StartScriptEventName, ScriptName);
+	//todo get a callback when it has started?
+}
+
 void UMachineLearningRemoteComponent::SendStringInput(const FString& InputData, const FString& FunctionName /*= TEXT("onJsonInput")*/)
 {
 	//Embed data in a ustruct, this will get auto-serialized into a python/json object on other side
@@ -114,7 +134,7 @@ void UMachineLearningRemoteComponent::SendStringInput(const FString& InputData, 
 	SendObject.InputData = InputData;
 	SendObject.TargetFunction = FunctionName;
 
-	Socket->Emit(SendInputEvent, FMLSendStringObject::StaticStruct(), &SendObject, [this, FunctionName](auto ResponseArray)
+	Socket->Emit(SendInputEventName, FMLSendStringObject::StaticStruct(), &SendObject, [this, FunctionName](auto ResponseArray)
 	{
 		//UE_LOG(MLBaseLog, Log, TEXT("Got callback response: %s"), *USIOJConvert::ToJsonString(ResponseArray));
 		if (ResponseArray.Num() == 0)
@@ -149,7 +169,7 @@ void UMachineLearningRemoteComponent::SendRawInput(const TArray<float>& InputDat
 	SendObject.InputData = InputData;
 	SendObject.TargetFunction = FunctionName;
 
-	Socket->Emit(SendInputEvent, FMLSendRawObject::StaticStruct(), &SendObject, [this, FunctionName](auto ResponseArray)
+	Socket->Emit(SendInputEventName, FMLSendRawObject::StaticStruct(), &SendObject, [this, FunctionName](auto ResponseArray)
 	{
 		//UE_LOG(MLBaseLog, Log, TEXT("Got callback response: %s"), *USIOJConvert::ToJsonString(ResponseArray));
 		if (ResponseArray.Num() == 0)
@@ -182,7 +202,7 @@ void UMachineLearningRemoteComponent::SendStringInputGraphCallback(const FString
 	SendObject.InputData = InputData;
 	SendObject.TargetFunction = FunctionName;
 
-	Socket->Emit(SendInputEvent, FMLSendStringObject::StaticStruct(), &SendObject, [this, FunctionName, LatentAction, &ResultData](auto ResponseArray)
+	Socket->Emit(SendInputEventName, FMLSendStringObject::StaticStruct(), &SendObject, [this, FunctionName, LatentAction, &ResultData](auto ResponseArray)
 	{
 		//UE_LOG(MLBaseLog, Log, TEXT("Got callback response: %s"), *USIOJConvert::ToJsonString(ResponseArray));
 		if (ResponseArray.Num() == 0)
@@ -217,7 +237,7 @@ void UMachineLearningRemoteComponent::SendRawInputGraphCallback(const TArray<flo
 	SendObject.InputData = InputData;
 	SendObject.TargetFunction = FunctionName;
 
-	Socket->Emit(SendInputEvent, FMLSendRawObject::StaticStruct(), &SendObject, [this, FunctionName, LatentAction, &ResultData](auto ResponseArray)
+	Socket->Emit(SendInputEventName, FMLSendRawObject::StaticStruct(), &SendObject, [this, FunctionName, LatentAction, &ResultData](auto ResponseArray)
 	{
 		//UE_LOG(MLBaseLog, Log, TEXT("Got callback response: %s"), *USIOJConvert::ToJsonString(ResponseArray));
 		if (ResponseArray.Num() == 0)
