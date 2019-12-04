@@ -34,7 +34,7 @@ Add a ```MachineLearningRemote``` component to an actor of choice
 
 ![](https://i.imgur.com/Mx3gNAi.png)
 
-Change server endpoint and default script (see https://github.com/getnamo/machine-learning-remote-ue4#pythonapi) to fit your use case
+Change server endpoint and ```DefaultScript``` to fit your use case. ```DefaultScript``` is the file name of your ML script which is placed in your *<[server](https://github.com/getnamo/ml-remote-server)>/scripts* folder. See https://github.com/getnamo/machine-learning-remote-ue4#python-api for example scripts.
 
 ![](https://i.imgur.com/R3YVPtm.png)
 
@@ -42,7 +42,7 @@ In your script the ```on_setup``` and if ```self.should_train_on_start``` is tru
 
 ![](https://i.imgur.com/WjmFLAu.png)
 
-Your inputs will process and any value you return will be processed in the callback and returned in ```ResultData``` as *USIOJsonValue* in your latent callback.
+Your inputs will be processed on your script side and any value you return from there will be sent back and returned in ```ResultData``` as *USIOJsonValue* in your latent callback.
 
 #### Other input variants
 
@@ -53,7 +53,7 @@ See https://github.com/getnamo/machine-learning-remote-ue4/blob/master/Source/Ma
 Change the ```FunctionName``` parameter in the ```SendSIOJsonInput``` to call a different function name in your script. This name will be used verbatim.
 
 ### Python API
-These scripts should be placed in your https://github.com/getnamo/ml-remote-server ```scripts``` folder. If a matching script is defined in your ```MachineLearningRemote```->```DefaultScript``` property it should load on connect.
+These scripts should be placed in your *<[server](https://github.com/getnamo/ml-remote-server)>/scripts* folder. If a matching script is defined in your ```MachineLearningRemote```->```DefaultScript``` property it should load on connect.
 
 Keep in mind that ```tensorflow``` is optional and used as an illustrative example of ML, you can use any other valid python library e.g. pytorch instead without issue.
 
