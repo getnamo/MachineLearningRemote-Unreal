@@ -1,5 +1,5 @@
 # machine-learning-remote-ue4
-Machine Learning plugin for the Unreal Engine, encapsulating calls to remote python servers running Tensorflow.
+Machine Learning plugin for the Unreal Engine, encapsulating calls to remote python servers running Tensorflow. Server complement repository: https://github.com/getnamo/ml-remote-server.
 
 Should have the same api as tensorflow-ue4, but with freedom to run a host server on platform of choice (e.g. remote win/linux/mac instances).
 
