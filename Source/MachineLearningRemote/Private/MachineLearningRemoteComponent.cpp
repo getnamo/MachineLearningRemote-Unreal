@@ -11,7 +11,7 @@ UMachineLearningRemoteComponent::UMachineLearningRemoteComponent()
 {
 	bConnectOnBeginPlay = true;
 	ServerType = ETFServerType::SERVER_PYTHON;
-	ServerAddressAndPort = TEXT("http://localhost:3000");
+	ServerAddressAndPort = TEXT("http://localhost:8080");
 	SendInputEventName = TEXT("sendInput");
 	StartScriptEventName = TEXT("startScript");
 	ScriptStartedEventName = TEXT("scriptStarted");
