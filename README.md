@@ -350,7 +350,7 @@ FTestCppStruct ResultStruct;
 
 MLComponent->SendStringInput(StructJsonString, [this, &ResultStruct](const FString& ResultData)
 {
-	//do something with the result, let's say we we have another struct of same type to fill
-	USIOJConvert::JsonObjectToUStruct(Message, FTestCppStruct::StaticStruct(), &ResultStruct);
+	//do something with the result, let's say we we have another struct of same type and we'd like to fill it with the results
+	USIOJConvert::JsonObjectToUStruct(USIOJConvert::ToJsonObject(ResultData), FTestCppStruct::StaticStruct(), &ResultStruct);
 }, FunctionName);
 ```
