@@ -75,7 +75,9 @@ public:
 	virtual void StartScript(const FString& ScriptName);
 
 	virtual void SendStringInput(const FString& InputData, const FString& FunctionName = TEXT("onJsonInput")) override;
+	virtual void SendStringInput(const FString& InputData, TFunction<void(const FString& ResultData)> ResultCallback, const FString& FunctionName = TEXT("onJsonInput")) override;
 	virtual void SendRawInput(const TArray<float>& InputData, const FString& FunctionName = TEXT("onFloatArrayInput")) override;
+	virtual void SendRawInput(const TArray<float>& InputData, TFunction<void(TArray<float>& ResultData)> ResultCallback, const FString& FunctionName = TEXT("onFloatArrayInput")) override;
 	virtual void SendStringInputGraphCallback(const FString& InputData, FString& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName = TEXT("onJsonInput")) override;
 	virtual void SendRawInputGraphCallback(const TArray<float>& InputData, TArray<float>& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName = TEXT("onFloatArrayInput")) override;
 

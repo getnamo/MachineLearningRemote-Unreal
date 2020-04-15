@@ -136,68 +136,96 @@ void UMachineLearningRemoteComponent::StartScript(const FString& ScriptName)
 
 void UMachineLearningRemoteComponent::SendStringInput(const FString& InputData, const FString& FunctionName /*= TEXT("onJsonInput")*/)
 {
+	const FString SafeFunctionName = FunctionName;
+	SendStringInput(InputData, [this, SafeFunctionName](const FString& ResultData)
+	{
+		OnInputResult.Broadcast(ResultData, SafeFunctionName);
+	}, FunctionName);
+}
+
+void UMachineLearningRemoteComponent::SendStringInput(const FString& InputData, TFunction<void(const FString& ResultData)> ResultCallback, const FString& FunctionName /*= TEXT("onJsonInput")*/)
+{
 	//Embed data in a ustruct, this will get auto-serialized into a python/json object on other side
 	FMLSendStringObject SendObject;
 	SendObject.InputData = InputData;
 	SendObject.TargetFunction = FunctionName;
 
-	Socket->Emit(SendInputEventName, FMLSendStringObject::StaticStruct(), &SendObject, [this, FunctionName](auto ResponseArray)
-	{
-		//UE_LOG(MLBaseLog, Log, TEXT("Got callback response: %s"), *USIOJConvert::ToJsonString(ResponseArray));
-		if (ResponseArray.Num() == 0)
-		{
-			return;
-		}
-		
-		//We only handle the one response for now
-		TSharedPtr<FJsonValue> Response = ResponseArray[0];
+	const auto SafeCallback = ResultCallback;
 
-		//Grab the value as a string
-		//Todo: support non-string encoding?
-		FString Result;
-
-		if (Response->Type == EJson::String)
+	Socket->Emit(SendInputEventName, FMLSendStringObject::StaticStruct(), &SendObject, [this, FunctionName, SafeCallback](auto ResponseArray)
 		{
-			Result = Response->AsString();
-		}
-		else
-		{
-			Result = USIOJConvert::ToJsonString(Response);
-		}
+			//UE_LOG(MLBaseLog, Log, TEXT("Got callback response: %s"), *USIOJConvert::ToJsonString(ResponseArray));
+			if (ResponseArray.Num() == 0)
+			{
+				return;
+			}
 
-		OnInputResult.Broadcast(Result, FunctionName);		
-	});
+			//We only handle the one response for now
+			TSharedPtr<FJsonValue> Response = ResponseArray[0];
+
+			//Grab the value as a string
+			//Todo: support non-string encoding?
+			FString Result;
+
+			if (Response->Type == EJson::String)
+			{
+				Result = Response->AsString();
+			}
+			else
+			{
+				Result = USIOJConvert::ToJsonString(Response);
+			}
+
+			if (SafeCallback)
+			{
+				SafeCallback(Result);
+			}
+		});
 }
 
 void UMachineLearningRemoteComponent::SendRawInput(const TArray<float>& InputData, const FString& FunctionName /*= TEXT("onFloatArrayInput")*/)
+{
+	const FString SafeFunctionName = FunctionName;
+	SendRawInput(InputData, [this, SafeFunctionName](TArray<float>& ResultData)
+	{
+		OnRawInputResult.Broadcast(ResultData, SafeFunctionName);
+	}, FunctionName);
+}
+
+void UMachineLearningRemoteComponent::SendRawInput(const TArray<float>& InputData, TFunction<void(TArray<float>& ResultData)> ResultCallback, const FString& FunctionName /*= TEXT("onFloatArrayInput")*/)
 {
 	//Embed data in a ustruct, this will get auto-serialized into a python/json object on other side
 	FMLSendRawObject SendObject;
 	SendObject.InputData = InputData;
 	SendObject.TargetFunction = FunctionName;
 
-	Socket->Emit(SendInputEventName, FMLSendRawObject::StaticStruct(), &SendObject, [this, FunctionName](auto ResponseArray)
-	{
-		//UE_LOG(MLBaseLog, Log, TEXT("Got callback response: %s"), *USIOJConvert::ToJsonString(ResponseArray));
-		if (ResponseArray.Num() == 0)
+	const auto SafeCallback = ResultCallback;
+
+	Socket->Emit(SendInputEventName, FMLSendRawObject::StaticStruct(), &SendObject, [this, FunctionName, SafeCallback](auto ResponseArray)
 		{
-			return;
-		}
+			//UE_LOG(MLBaseLog, Log, TEXT("Got callback response: %s"), *USIOJConvert::ToJsonString(ResponseArray));
+			if (ResponseArray.Num() == 0)
+			{
+				return;
+			}
 
-		//We only handle the one response for now
-		TSharedPtr<FJsonValue> Response = ResponseArray[0];
+			//We only handle the one response for now
+			TSharedPtr<FJsonValue> Response = ResponseArray[0];
 
-		if (Response->Type != EJson::Object)
-		{
-			UE_LOG(MLBaseLog, Warning, TEXT("SendRawInput: Expected float array wrapped object, got %s"), *USIOJConvert::ToJsonString(ResponseArray));
-			return;
-		}
+			if (Response->Type != EJson::Object)
+			{
+				UE_LOG(MLBaseLog, Warning, TEXT("SendRawInput: Expected float array wrapped object, got %s"), *USIOJConvert::ToJsonString(ResponseArray));
+				return;
+			}
 
-		FMLSendRawObject ReceiveObject;
-		USIOJConvert::JsonObjectToUStruct(Response->AsObject(), FMLSendRawObject::StaticStruct(), &ReceiveObject);
+			FMLSendRawObject ReceiveObject;
+			USIOJConvert::JsonObjectToUStruct(Response->AsObject(), FMLSendRawObject::StaticStruct(), &ReceiveObject);
 
-		OnRawInputResult.Broadcast(ReceiveObject.InputData, ReceiveObject.TargetFunction);
-	});
+			if (SafeCallback != nullptr)
+			{
+				SafeCallback(ReceiveObject.InputData);
+			}
+		});
 }
 
 void UMachineLearningRemoteComponent::SendStringInputGraphCallback(const FString& InputData, FString& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName /*= TEXT("onJsonInput")*/)

@@ -93,6 +93,9 @@ public:
 	UFUNCTION(BlueprintCallable, meta = (Latent, LatentInfo = "LatentInfo"), Category = MachineLearningFunctions)
 	virtual void SendRawInputGraphCallback(const TArray<float>& InputData, TArray<float>& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName = TEXT("onFloatArrayInput"));
 
+	//Native lambda callback variant, lambda must be specified to differentiate it from blueprint variant
+	virtual void SendStringInput(const FString& InputData, TFunction<void(const FString& ResultData)> ResultCallback, const FString& FunctionName = TEXT("onJsonInput"));
+	virtual void SendRawInput(const TArray<float>& InputData, TFunction<void(TArray<float>& ResultData)> ResultCallback, const FString& FunctionName = TEXT("onFloatArrayInput"));
 private:
 	void ImmediateLatentResponse(struct FLatentActionInfo LatentInfo);
 

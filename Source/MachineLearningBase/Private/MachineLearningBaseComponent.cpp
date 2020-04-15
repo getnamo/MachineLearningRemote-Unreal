@@ -18,12 +18,31 @@ void UMachineLearningBaseComponent::SendStringInput(const FString& InputData, co
 	OnInputResult.Broadcast(ResultData, FunctionName);
 }
 
+void UMachineLearningBaseComponent::SendStringInput(const FString& InputData, TFunction<void(const FString& ResultData)> ResultCallback, const FString& FunctionName /*= TEXT("onJsonInput")*/)
+{
+	UE_LOG(MLBaseLog, Warning, TEXT("SendStringInputLambdaOverload not implemented"));
+	if (ResultCallback)
+	{
+		ResultCallback(TEXT(""));
+	}
+}
+
 void UMachineLearningBaseComponent::SendRawInput(const TArray<float>& InputData, const FString& FunctionName /*= TEXT("onFloatArrayInput")*/)
 {
 	UE_LOG(MLBaseLog, Warning, TEXT("SendRawInput not implemented"));
 
 	TArray<float> ResultData;
 	OnRawInputResult.Broadcast(ResultData, FunctionName);
+}
+
+void UMachineLearningBaseComponent::SendRawInput(const TArray<float>& InputData, TFunction<void(TArray<float>& ResultData)> ResultCallback /*= nullptr*/, const FString& FunctionName /*= TEXT("onFloatArrayInput")*/)
+{
+	UE_LOG(MLBaseLog, Warning, TEXT("SendRawInputLambdaOverload not implemented"));
+	if (ResultCallback)
+	{
+		TArray<float> ResultData;
+		ResultCallback(ResultData);
+	}
 }
 
 void UMachineLearningBaseComponent::SendStringInputGraphCallback(const FString& InputData, FString& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName /*= TEXT("Default")*/)
@@ -56,4 +75,3 @@ void UMachineLearningBaseComponent::ImmediateLatentResponse(struct FLatentAction
 	int32 UUID = LatentInfo.UUID;
 	LatentActionManager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID, LatentAction);
 }
-
