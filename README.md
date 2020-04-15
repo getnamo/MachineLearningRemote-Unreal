@@ -262,6 +262,8 @@ def get_api():
 
 ### C++ API
 
+Available since 0.3.1. 
+
 Same as blueprint API except for one additional callback variant. Use the lambda overloaded functions e.g. assuming you have a component defined as
 ```c++
 UMachineLearningRemoteComponent* MLComponent; //NB: this needs to be allocated with NewObject or CreateDefaultSubobject 
