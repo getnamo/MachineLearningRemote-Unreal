@@ -68,18 +68,19 @@ public:
 
 	/** For remote ML components we can use socket.io protocol to communicate objects directly. Return result in graph context. */
 	UFUNCTION(BlueprintCallable, meta = (Latent, LatentInfo = "LatentInfo"), Category = MLFunctions)
-	virtual void SendSIOJsonInput(USIOJsonValue* InputData, USIOJsonValue*& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName = TEXT("onJsonInput"));
+	virtual void SendSIOJsonInput(USIOJsonValue* InputData, USIOJsonValue*& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName = TEXT("on_json_input"));
 
 	/** Start designated script. Get's called on beginplay by default*/
 	UFUNCTION(BlueprintCallable, Category = MLFunctions)
 	virtual void StartScript(const FString& ScriptName);
 
-	virtual void SendStringInput(const FString& InputData, const FString& FunctionName = TEXT("onJsonInput")) override;
-	virtual void SendStringInput(const FString& InputData, TFunction<void(const FString& ResultData)> ResultCallback, const FString& FunctionName = TEXT("onJsonInput")) override;
-	virtual void SendRawInput(const TArray<float>& InputData, const FString& FunctionName = TEXT("onFloatArrayInput")) override;
-	virtual void SendRawInput(const TArray<float>& InputData, TFunction<void(TArray<float>& ResultData)> ResultCallback, const FString& FunctionName = TEXT("onFloatArrayInput")) override;
-	virtual void SendStringInputGraphCallback(const FString& InputData, FString& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName = TEXT("onJsonInput")) override;
-	virtual void SendRawInputGraphCallback(const TArray<float>& InputData, TArray<float>& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName = TEXT("onFloatArrayInput")) override;
+	//NB by default python pep expects lowercase_lowercase function names. This is different from BaseComponent defaults, which uses camelCase
+	virtual void SendStringInput(const FString& InputData, const FString& FunctionName = TEXT("on_json_input")) override;
+	virtual void SendStringInput(const FString& InputData, TFunction<void(const FString& ResultData)> ResultCallback, const FString& FunctionName = TEXT("on_json_input")) override;
+	virtual void SendRawInput(const TArray<float>& InputData, const FString& FunctionName = TEXT("on_float_array_input")) override;
+	virtual void SendRawInput(const TArray<float>& InputData, TFunction<void(TArray<float>& ResultData)> ResultCallback, const FString& FunctionName = TEXT("on_float_array_input")) override;
+	virtual void SendStringInputGraphCallback(const FString& InputData, FString& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName = TEXT("on_json_input")) override;
+	virtual void SendRawInputGraphCallback(const TArray<float>& InputData, TArray<float>& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName = TEXT("on_float_array_input")) override;
 
 protected:
 	TSharedPtr<FSocketIONative> Socket;

@@ -1,7 +1,7 @@
 {
 	"FileVersion": 3,
 	"Version": 1,
-	"VersionName": "0.3.1",
+	"VersionName": "0.3.2",
 	"FriendlyName": "MachineLearningRemote",
 	"Description": "Machine Learning plugin for the Unreal Engine, encapsulating calls to remote servers running Tensorflow or Pytorch. Contains base API for many specialized plugin variants to be easily swappable without changing developer bind.",
 	"Category": "Computing",

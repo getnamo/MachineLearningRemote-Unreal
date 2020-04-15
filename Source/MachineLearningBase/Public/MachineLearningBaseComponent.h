@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Runtime/Engine/Classes/Engine/LatentActionManager.h"
+#include "Runtime/Json/Public/Dom/JsonValue.h"
 #include "MachineLearningBaseComponent.generated.h"
 
 /** Struct for combining data string and function for auto-serialized input */
@@ -85,17 +86,21 @@ public:
 	UFUNCTION(BlueprintCallable, Category = MachineLearningFunctions)
 	virtual void SendRawInput(const TArray<float>& InputData, const FString& FunctionName = TEXT("onFloatArrayInput"));
 
-	/** Send input to ML side result will come back as a latent action in the graph. Recommended method. Optionally re-target to another function name. */
+	/** BP Only. Send input to ML side result will come back as a latent action in the graph. Recommended method. Optionally re-target to another function name. */
 	UFUNCTION(BlueprintCallable, meta = (Latent, LatentInfo = "LatentInfo"), Category = MachineLearningFunctions)
 	virtual void SendStringInputGraphCallback(const FString& InputData, FString& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName = TEXT("onJsonInput"));
 
-	/** Send float array input, bypasses encoding. Useful for large data/native inference, may not work in remote context. Result will come back as a latent action in the graph.*/
+	/** BP Only. Send float array input, bypasses encoding. Useful for large data/native inference, may not work in remote context. Result will come back as a latent action in the graph.*/
 	UFUNCTION(BlueprintCallable, meta = (Latent, LatentInfo = "LatentInfo"), Category = MachineLearningFunctions)
 	virtual void SendRawInputGraphCallback(const TArray<float>& InputData, TArray<float>& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName = TEXT("onFloatArrayInput"));
 
-	//Native lambda callback variant, lambda must be specified to differentiate it from blueprint variant
+	//C++ Only. Native lambda callback variant, lambda must be specified to differentiate it from blueprint variant
 	virtual void SendStringInput(const FString& InputData, TFunction<void(const FString& ResultData)> ResultCallback, const FString& FunctionName = TEXT("onJsonInput"));
 	virtual void SendRawInput(const TArray<float>& InputData, TFunction<void(TArray<float>& ResultData)> ResultCallback, const FString& FunctionName = TEXT("onFloatArrayInput"));
+
+	//convenience variant, to be added later
+	//virtual void SendJsonInput(TSharedPtr<FJsonObject> InputData, TFunction<void(TSharedPtr<FJsonObject> ResultData)> ResultCallback, const FString& FunctionName = TEXT("onJsonInput"));
+
 private:
 	void ImmediateLatentResponse(struct FLatentActionInfo LatentInfo);
 
