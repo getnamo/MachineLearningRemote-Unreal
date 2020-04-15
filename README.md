@@ -258,3 +258,97 @@ def get_api():
 	#return CLASSNAME.get_instance()
 	return MnistSimple.get_instance()
 ```
+
+
+### C++ API
+
+Same as blueprint API except for one additional callback variant. Use the lambda overloaded functions e.g. assuming you have a component defined as
+```c++
+UMachineLearningRemoteComponent* MLComponent; //NB: this needs to be allocated with NewObject or CreateDefaultSubobject 
+```
+
+#### SendRawInput
+```c++
+//Let's say you want to send some raw data
+TArray<float> InputData;
+//... fill
+
+MLComponent->SendRawInput(InputData, [this](TArray<float>& ResultData)
+{
+	//Now we got our results back, do something with them here
+}, FunctionName);
+```
+
+#### SendStringInput
+
+Keep in mind that if you're using USIOJConvert utilities you'll need to add *SIOJson*, and *Json* as dependency modules in your project build.cs.
+
+```c#
+PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "Json", "SIOJson" });
+```
+
+Sending just a String
+
+```c++
+FString InputString = TEXT("Some Data")
+
+MLComponent->SendStringInput(InputString, [this](const FString& ResultData)
+{
+	//e.g. just print the result
+	UE_LOG(LogTemp, Log, TEXT("Got some results: %s"), *ResultData);
+}, FunctionName);
+```
+
+A custom JsonObject
+
+```c++
+//Make an object {"myKey":"myValue"}
+TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject);
+JsonObject->SetStringField(TEXT("myKey"), TEXT("myValue"));
+FString InputString = USIOJConvert::ToJsonString(JsonObject);
+
+MLComponent->SendStringInput(InputString, [this](const FString& ResultData)
+{
+	//assuming you got a json string response we could query it, e.g. assume {"someNumber":5}
+	TSharedPtr<FJsonObject> JsonObject = USIOJConvert::ToJsonObject(ResultData);
+	double MyNumber = JsonObject->GetNumberField("someNumber");
+	
+	//do something with your number result
+}, FunctionName);
+```
+
+Structs via Json
+```c++
+//Let's say you want to send some struct data in json format
+
+USTRUCT()
+struct FTestCppStruct
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	int32 Index;
+
+	UPROPERTY()
+	float SomeNumber;
+
+	UPROPERTY()
+	FString Name;
+};
+
+//...
+
+FTestCppStruct TestStruct;
+TestStruct.Name = TEXT("George");
+TestStruct.Index = 5;
+TestStruct.SomeNumber = 5.123f;
+FString StructJsonString = USIOJConvert::ToJsonString(USIOJConvert::ToJsonObject(FTestCppStruct::StaticStruct(), &TestStruct));
+
+FTestCppStruct ResultStruct;
+
+MLComponent->SendStringInput(StructJsonString, [this, &ResultStruct](const FString& ResultData)
+{
+	//do something with the result, let's say we we have another struct of same type to fill
+	USIOJConvert::JsonObjectToUStruct(Message, FTestCppStruct::StaticStruct(), &ResultStruct);
+}, FunctionName);
+```
