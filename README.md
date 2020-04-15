@@ -293,7 +293,7 @@ PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engi
 Sending just a String
 
 ```c++
-FString InputString = TEXT("Some Data")
+FString InputString = TEXT("Some Data");
 
 MLComponent->SendStringInput(InputString, [this](const FString& ResultData)
 {
