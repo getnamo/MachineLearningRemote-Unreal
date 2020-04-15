@@ -346,6 +346,7 @@ TestStruct.Index = 5;
 TestStruct.SomeNumber = 5.123f;
 FString StructJsonString = USIOJConvert::ToJsonString(USIOJConvert::ToJsonObject(FTestCppStruct::StaticStruct(), &TestStruct));
 
+//In this example we're using the same struct type for the result, but you could use a different one or custom Json
 FTestCppStruct ResultStruct;
 
 MLComponent->SendStringInput(StructJsonString, [this, &ResultStruct](const FString& ResultData)
