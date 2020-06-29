@@ -4,12 +4,15 @@
 #include "MachineLearningRemoteComponent.h"
 #include "MachineLearningBase.h"
 #include "SocketIOClient.h"
-#include "MLProcess.h"
 #include "CULambdaRunnable.h"
 
+bool UMachineLearningRemoteComponent::bServerIsRunning = false;
+TSharedPtr<FMLProcess> UMachineLearningRemoteComponent::Process = nullptr;
 
 UMachineLearningRemoteComponent::UMachineLearningRemoteComponent()
 {
+	PrimaryComponentTick.bCanEverTick = true;
+
 	bConnectOnBeginPlay = true;
 	ServerType = ETFServerType::SERVER_PYTHON;
 	ServerAddressAndPort = TEXT("http://localhost:8080");
@@ -22,7 +25,8 @@ UMachineLearningRemoteComponent::UMachineLearningRemoteComponent()
 	bStartScriptOnConnection = true;
 
 	bUseEmbeddedServer = false;
-	EmbeddedServerRelativePath = TEXT("Server/python3.7");
+	bAutoStartServer = false;
+	EmbeddedServerRelativePath = TEXT("python3.7");
 
 	Socket = ISocketIOClientModule::Get().NewValidNativePointer();
 }
@@ -35,6 +39,26 @@ UMachineLearningRemoteComponent::~UMachineLearningRemoteComponent()
 void UMachineLearningRemoteComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	/** autostart server if enabled */
+	if (bAutoStartServer && !bServerIsRunning)
+	{
+		bServerIsRunning = true;
+		FString PluginServerFolderPath = FPaths::Combine(FPaths::ProjectPluginsDir(), TEXT("machine-learning-remote-ue4/Server"));
+		FString ServerScriptPath = FPaths::Combine(PluginServerFolderPath, TEXT("ml-remote-server"));
+		
+		//UE_LOG(LogTemp, Log, TEXT("%s"), *ServerPath);
+		if (bUseEmbeddedServer)
+		{
+			FString EmbeddedServerPath = FPaths::Combine(PluginServerFolderPath, EmbeddedServerRelativePath); //-p ServerScriptPath
+			Process = FMLProcess::Create(EmbeddedServerPath + TEXT("/python.exe"), ServerScriptPath + TEXT("/server.py -e"), true, false, false, 0, ServerScriptPath, true);
+		}
+		else
+		{
+			Process = FMLProcess::Create(TEXT("python"), ServerScriptPath + TEXT("/server.py"), true, false, false, 0, TEXT(""), true);
+		}
+		
+	}
 	
 	//Setup callbacks
 	Socket->OnConnectedCallback = [this](const FString& InSessionId)
@@ -85,6 +109,7 @@ void UMachineLearningRemoteComponent::BeginPlay()
 	{
 		if (Socket.IsValid())
 		{
+			
 		};
 	};
 	Socket->OnEvent(ScriptStartedEventName, [this](const FString& EventName, const TSharedPtr<FJsonValue>& Params)
@@ -102,6 +127,46 @@ void UMachineLearningRemoteComponent::BeginPlay()
 	{
 		Socket->Connect(ServerAddressAndPort);
 	}
+}
+
+void UMachineLearningRemoteComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Socket->Disconnect();
+	Socket->ClearCallbacks();
+
+	if (bServerIsRunning)
+	{
+		Process->IsRunning();
+		Process->Terminate();
+		Process->Close();
+		Process = nullptr;
+		bServerIsRunning = false;
+	}
+	Super::EndPlay(EndPlayReason);
+}
+
+void UMachineLearningRemoteComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	if (bServerIsRunning && Process.IsValid())
+	{
+		FString PipeData = Process->ReadFromPipe();
+
+		if (!PipeData.IsEmpty())
+		{
+			UE_LOG(LogTemp, Log, TEXT("Server: %s"), *PipeData);
+		}
+
+		if (!Process->IsRunning())
+		{
+			int32 ReturnCode;
+			Process->GetReturnCode(ReturnCode);
+			UE_LOG(LogTemp, Log, TEXT("Server finished with: %d"), ReturnCode);
+
+			Process = nullptr;
+			bServerIsRunning = false;
+		}
+	}
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
 void UMachineLearningRemoteComponent::SendSIOJsonInput(USIOJsonValue* InputData, USIOJsonValue*& ResultData, struct FLatentActionInfo LatentInfo, const FString& FunctionName /*= TEXT("onJsonInput")*/)

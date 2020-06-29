@@ -12,7 +12,11 @@ FMLProcess::FMLProcess()
 
 FMLProcess::~FMLProcess()
 {
-
+	if (IsRunning())
+	{
+		Terminate();
+	}
+	Close();
 }
 
 

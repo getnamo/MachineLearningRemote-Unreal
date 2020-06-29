@@ -6,6 +6,7 @@
 #include "MachineLearningBaseComponent.h"
 #include "SocketIONative.h"
 #include "SIOJsonValue.h"
+#include "MLProcess.h"
 #include "MachineLearningRemoteComponent.generated.h"
 
 UENUM(BlueprintType)
@@ -64,16 +65,24 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = MLRemoteProperties)
 	ETFServerType ServerType;
 
-	/** If true, will launch an embedded server. Requires the embedded server type exists in third party. */
+	/** If true it will bootup a server on beginplay. Requires python to be installed. */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = MLEmbeddedProperties)
+	bool bAutoStartServer;
+
+	static bool bServerIsRunning;
+
+	/** EXPERIMENTAL: If true, will launch an embedded server. Requires the embedded server type exists in third party. */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = MLEmbeddedProperties)
 	bool bUseEmbeddedServer;
 
-	/** Relative to plugin root */
+	/** EXPERIMENTAL: Relative to plugin root */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = MLEmbeddedProperties)
 	FString EmbeddedServerRelativePath;
 
 
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	/** For remote ML components we can use socket.io protocol to communicate objects directly. Return result in graph context. */
 	UFUNCTION(BlueprintCallable, meta = (Latent, LatentInfo = "LatentInfo"), Category = MLFunctions)
@@ -93,4 +102,5 @@ public:
 
 protected:
 	TSharedPtr<FSocketIONative> Socket;
+	static TSharedPtr<FMLProcess> Process;
 };
