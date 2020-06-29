@@ -64,6 +64,15 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = MLRemoteProperties)
 	ETFServerType ServerType;
 
+	/** If true, will launch an embedded server. Requires the embedded server type exists in third party. */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = MLEmbeddedProperties)
+	bool bUseEmbeddedServer;
+
+	/** Relative to plugin root */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = MLEmbeddedProperties)
+	FString EmbeddedServerRelativePath;
+
+
 	virtual void BeginPlay() override;
 
 	/** For remote ML components we can use socket.io protocol to communicate objects directly. Return result in graph context. */

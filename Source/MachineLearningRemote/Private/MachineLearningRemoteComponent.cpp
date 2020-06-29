@@ -4,6 +4,7 @@
 #include "MachineLearningRemoteComponent.h"
 #include "MachineLearningBase.h"
 #include "SocketIOClient.h"
+#include "MLProcess.h"
 #include "CULambdaRunnable.h"
 
 
