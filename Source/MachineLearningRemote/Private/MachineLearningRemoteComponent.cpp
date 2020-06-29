@@ -21,6 +21,9 @@ UMachineLearningRemoteComponent::UMachineLearningRemoteComponent()
 	bScriptRunning = false;
 	bStartScriptOnConnection = true;
 
+	bUseEmbeddedServer = false;
+	EmbeddedServerRelativePath = TEXT("Server/python3.7");
+
 	Socket = ISocketIOClientModule::Get().NewValidNativePointer();
 }
 
