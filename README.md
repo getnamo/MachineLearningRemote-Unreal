@@ -23,7 +23,7 @@ Want native tensorflow inference? (WIP)
 
 ## Quick Install & Setup
 
-1. Install https://github.com/getnamo/ml-remote-server on your target backend (can be a local folder)
+1. Install and setup https://github.com/getnamo/ml-remote-server on your target backend (can be a local folder), or setup the one embedded in plugin.
 2. Download [Latest Release](https://github.com/getnamo/machine-learning-remote-ue4/releases)
 3. Create new or choose project.
 4. Browse to your project folder (typically found at Documents/Unreal Project/{Your Project Root})
