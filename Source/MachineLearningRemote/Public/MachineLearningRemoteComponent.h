@@ -21,7 +21,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMLScriptSignature, FString, ScriptN
 /**
  * Implements ML API via remote server calls
  */
-UCLASS(BlueprintType, ClassGroup = Computing, meta = (BlueprintSpawnableComponent))
+UCLASS(BlueprintType, Blueprintable, ClassGroup = Computing, meta = (BlueprintSpawnableComponent))
 class MACHINELEARNINGREMOTE_API UMachineLearningRemoteComponent : public UMachineLearningBaseComponent
 {
 	GENERATED_BODY()
@@ -55,7 +55,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = MLRemoteProperties)
 	bool bStartScriptOnConnection;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = MLRemoteProperties)
+	UPROPERTY(BlueprintReadOnly, Category = MLRemoteProperties)
 	bool bScriptRunning;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = MLRemoteProperties)
@@ -78,6 +78,9 @@ public:
 	/** EXPERIMENTAL: Relative to plugin root */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = MLEmbeddedProperties)
 	FString EmbeddedServerRelativePath;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = MLEmbeddedProperties)
+	bool bPrintServerLog;
 
 
 	virtual void BeginPlay() override;

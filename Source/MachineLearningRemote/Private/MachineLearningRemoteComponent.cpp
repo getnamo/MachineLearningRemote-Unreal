@@ -26,6 +26,7 @@ UMachineLearningRemoteComponent::UMachineLearningRemoteComponent()
 
 	bUseEmbeddedServer = false;
 	bAutoStartServer = false;
+	bPrintServerLog = true;
 	EmbeddedServerRelativePath = TEXT("python3.7");
 
 	Socket = ISocketIOClientModule::Get().NewValidNativePointer();
@@ -151,7 +152,7 @@ void UMachineLearningRemoteComponent::TickComponent(float DeltaTime, enum ELevel
 	{
 		FString PipeData = Process->ReadFromPipe();
 
-		if (!PipeData.IsEmpty())
+		if (!PipeData.IsEmpty() && bPrintServerLog)
 		{
 			UE_LOG(LogTemp, Log, TEXT("Server: %s"), *PipeData);
 		}
