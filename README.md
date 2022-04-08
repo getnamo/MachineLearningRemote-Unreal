@@ -15,11 +15,11 @@ Want to run tensorflow or pytorch on a remote (or local) python server?
 
 Want to use tensorflow python api with a python instance embedded in your unreal engine project? 
 
-- https://github.com/getnamo/tensorflow-ue4
+- https://github.com/getnamo/TensorFlow-Unreal
 
 Want native tensorflow inference? (WIP)
 
-- https://github.com/getnamo/tensorflow-native-ue4
+- https://github.com/getnamo/TensorFlowNative-Unreal
 
 ## Quick Install & Setup
 
@@ -62,7 +62,7 @@ These scripts should be placed in your *<[server](https://github.com/getnamo/ml-
 Keep in mind that ```tensorflow``` is optional and used as an illustrative example of ML, you can use any other valid python library e.g. pytorch instead without issue.
 
 See https://github.com/getnamo/ml-remote-server/tree/master/scripts for additional examples.
-See https://github.com/getnamo/tensorflow-ue4#python-api for more detailed api examples.
+See https://github.com/getnamo/TensorFlow-Unreal#python-api for more detailed api examples.
 
 #### empty_example
 
