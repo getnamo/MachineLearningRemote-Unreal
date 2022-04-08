@@ -1,8 +1,8 @@
 # MachineLearningRemote Unreal Plugin
 A Machine Learning (ML) plugin for the Unreal Engine, encapsulating calls to remote python servers running python ML libraries like Tensorflow or Pytorch. Depends on server complement repository: https://github.com/getnamo/ml-remote-server.
 
-[![GitHub release](https://img.shields.io/github/release/getnamo/machine-learning-remote-ue4.svg)](https://github.com/getnamo/machine-learning-remote-ue4/releases)
-[![Github All Releases](https://img.shields.io/github/downloads/getnamo/machine-learning-remote-ue4/total.svg)](https://github.com/getnamo/machine-learning-remote-ue4/releases)
+[![GitHub release](https://img.shields.io/github/release/getnamo/MachineLearningRemote-Unreal.svg)](https://github.com/getnamo/MachineLearningRemote-Unreal/releases)
+[![Github All Releases](https://img.shields.io/github/downloads/getnamo/MachineLearningRemote-Unreal/total.svg)](https://github.com/getnamo/MachineLearningRemote-Unreal/releases)
 
 
 Should have the same api as [tensorflow-ue4](https://github.com/getnamo/tensorflow-ue4), but with freedom to run a host server on platform of choice (e.g. remote win/linux/mac instances) and without a hard bind to the tensorflow library.
@@ -11,7 +11,7 @@ Should have the same api as [tensorflow-ue4](https://github.com/getnamo/tensorfl
 
 Want to run tensorflow or pytorch on a remote (or local) python server?
 
-- https://github.com/getnamo/machine-learning-remote-ue4
+- https://github.com/getnamo/MachineLearningRemote-Unreal
 
 Want to use tensorflow python api with a python instance embedded in your unreal engine project? 
 
@@ -24,7 +24,7 @@ Want native tensorflow inference? (WIP)
 ## Quick Install & Setup
 
 1. Install and setup https://github.com/getnamo/ml-remote-server on your target backend (can be a local folder), or setup the one embedded in plugin.
-2. Download [Latest Release](https://github.com/getnamo/machine-learning-remote-ue4/releases)
+2. Download [Latest Release](https://github.com/getnamo/MachineLearningRemote-Unreal/releases)
 3. Create new or choose project.
 4. Browse to your project folder (typically found at Documents/Unreal Project/{Your Project Root})
 5. Copy Plugins folder into your Project root.
@@ -38,7 +38,7 @@ Add a ```MachineLearningRemote``` component to an actor of choice
 
 ![](https://i.imgur.com/Mx3gNAi.png)
 
-Change server endpoint and ```DefaultScript``` to fit your use case. ```DefaultScript``` is the file name of your ML script which is placed in your *<[server](https://github.com/getnamo/ml-remote-server)>/scripts* folder. See https://github.com/getnamo/machine-learning-remote-ue4#python-api for example scripts.
+Change server endpoint and ```DefaultScript``` to fit your use case. ```DefaultScript``` is the file name of your ML script which is placed in your *<[server](https://github.com/getnamo/ml-remote-server)>/scripts* folder. See https://github.com/getnamo/MachineLearningRemote-Unreal#python-api for example scripts.
 
 ![](https://i.imgur.com/R3YVPtm.png)
 
@@ -50,7 +50,7 @@ Your inputs will be processed on your script side and any value you return from 
 
 #### Other input variants
 
-See https://github.com/getnamo/machine-learning-remote-ue4/blob/master/Source/MachineLearningRemote/Public/MachineLearningRemoteComponent.h for all variants
+See https://github.com/getnamo/MachineLearningRemote-Unreal/blob/master/Source/MachineLearningRemote/Public/MachineLearningRemoteComponent.h for all variants
 
 #### Custom Function
 
