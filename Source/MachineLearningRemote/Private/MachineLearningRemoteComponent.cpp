@@ -62,12 +62,12 @@ void UMachineLearningRemoteComponent::BeginPlay()
 	}
 	
 	//Setup callbacks
-	Socket->OnConnectedCallback = [this](const FString& InSessionId)
+	Socket->OnConnectedCallback = [this](const FString& SocketId, const FString& SessionId)
 	{
 		if (Socket.IsValid())
 		{
 			bIsConnectedToBackend = true;
-			OnConnectedToBackend.Broadcast(InSessionId);
+			OnConnectedToBackend.Broadcast(SessionId);
 
 			if (bStartScriptOnConnection)
 			{
@@ -133,7 +133,7 @@ void UMachineLearningRemoteComponent::BeginPlay()
 void UMachineLearningRemoteComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Socket->Disconnect();
-	Socket->ClearCallbacks();
+	Socket->ClearAllCallbacks();
 
 	if (bServerIsRunning)
 	{
